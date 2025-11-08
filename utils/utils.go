@@ -3,18 +3,18 @@ package utils
 import "golang.org/x/crypto/bcrypt"
 
 //create hashed pass using generatefrompassword
-func HashPassword(password string) (string, error) {  //plain password string as input and return hashed pass string and error if wrong
+func HashPassword(password string) (string, error) {  
 	HashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost) //convert pass string into byte as bycrpyt requires this
-	if err != nil {                                                   //defaultcost (higher cost-more secure)            
+	if err != nil {                                                              
 		return "", err
 	}
 
 	return string(HashPassword), nil    //convert hash pass from byte slice to string and return it
 }
 
-
-func ComparePassword(plainPass, HashedPass string) error { //take in plain pass and hashed to compare
-	err := bcrypt.CompareHashAndPassword([]byte(HashedPass), []byte(plainPass)) //comparefunc to compare passwords and convert to byte slices.
+//comparefunc to compare passwords and convert to byte slices.
+func ComparePassword(plainPass, HashedPass string) error { 
+	err := bcrypt.CompareHashAndPassword([]byte(HashedPass), []byte(plainPass)) 
 	if err != nil {
 		return err
 	}

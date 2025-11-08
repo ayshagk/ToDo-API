@@ -7,6 +7,7 @@ import (
 	"todoapi/models"
 )
 
+//established a connection to the db using the connection string, opened the connection with gorm and migrated the user and todo tables into postgres
 var Db *gorm.DB
 
 func InitDB() {
