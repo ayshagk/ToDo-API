@@ -7,12 +7,17 @@ type User struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	Todos []Todo `json:"todos" gorm:"foreignKey:UserID"`
+	Todos    []Todo `json:"todos" gorm:"foreignKey:UserID"`
 }
 
 type Todo struct {
 	gorm.Model
-	Title string `json:"title"`
-	Check bool `json:"check"`
-	UserID uint `json:"user_id"`
+	Title  string `json:"title"`
+	Check  bool   `json:"check"`
+	UserID uint   `json:"user_id"`
+}
+
+type Login struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
