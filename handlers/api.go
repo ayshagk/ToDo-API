@@ -2,32 +2,31 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"todoapi/database"
 	"todoapi/models"
 	"todoapi/utils"
 )
 
-func RegisterUser(w http.ResponseWriter, r *http.Request){
+func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	var req *models.User
 	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil{
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	var user models.User
 	err = database.Db.Where("email = ?", req.Email).First(&user).Error
-	 if err == nil{
+	if err == nil {
 		http.Error(w, "sorry user already exists", http.StatusBadRequest)
-		return 
-	 }
+		return
+	}
 
 	HashPassword, err := utils.HashPassword(req.Password)
-	if err != nil{
+	if err != nil {
 		http.Error(w, "unable to hash the password", http.StatusBadRequest)
-		return 
+		return
 	}
 
 	req.Password = HashPassword
@@ -41,9 +40,26 @@ func RegisterUser(w http.ResponseWriter, r *http.Request){
 	// send a response
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("user registered successfully!"))
-	
-	
 
-	
-	 
+}
+
+func Login() {
+
+}
+
+func CreateToDo(){
+
+}
+
+func GetToDos(){
+
+}
+
+func UpdateToDo(){
+
+
+}
+
+func DeleteToDo(){
+
 }
