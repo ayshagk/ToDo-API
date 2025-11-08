@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"todoapi/database"
 	"todoapi/middleware"
@@ -78,15 +79,51 @@ return
 w.WriteHeader(200)
 json.NewEncoder(w).Encode(token)
 }
+
+func CreateToDo(w http.ResponseWriter, r *http.Request){
+	var addTodo models.Todo
+	err := json.NewDecoder(r.Body).Decode(&addTodo)
+	if err != nil {
+		http.Error(w, "invalid request", http.StatusBadRequest)
+		return 
+	}
+
+
+	userID, err:= middleware.GetUserIDFromToken(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return 
+	}
+
+	addTodo.UserID = userID
+
+	err = database.Db.Create(&addTodo).Error
+	if err != nil {
+		http.Error(w, "failed to add toDo", http.StatusInternalServerError)
+		return 
+	}
+
+	fmt.Fprintln(w, "toDo added successfully:)")
+
+}
+
+func GetToDos(w http.ResponseWriter, r *http.Request){
+	userID, err := middleware.GetUserIDFromToken(r)
+	if err != nil{
+		http.Error(w, "access denied ", http.StatusUnauthorized)
+		return 
+	}
+var allTodos []models.Todo
+err = database.Db.Where("user_id = ?", userID).Find(&allTodos).Error
+if err != nil{
+	http.Error(w, err.Error(), http.StatusInternalServerError)
+	return 
+}
+
+json.NewEncoder(w).Encode(allTodos)
+
+}
 /*
-func CreateToDo(){
-
-}
-
-func GetToDos(){
-
-}
-
 func UpdateToDo(){
 
 
