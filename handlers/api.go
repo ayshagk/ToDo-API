@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"todoapi/database"
 	"todoapi/middleware"
 	"todoapi/models"
@@ -123,13 +124,49 @@ if err != nil{
 json.NewEncoder(w).Encode(allTodos)
 
 }
-/*
-func UpdateToDo(){
 
+func UpdateToDo(w http.ResponseWriter, r *http.Request){
+	userID, err := middleware.GetUserIDFromToken(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return 
+	}
+
+	todoIDStr := r.URL.Query().Get("id")
+	todoID, err := strconv.Atoi(todoIDStr)
+	if err != nil{
+		http.Error(w, "invalid todo id", http.StatusBadRequest)
+		return 
+	}
+
+	var todo models.Todo
+	err = database.Db.First(&todo, "id = ? AND user_id = ?", todoID, userID).First(&todo).Error
+	if err != nil{
+		http.Error(w, "this todo does not belong to the user", http.StatusNotFound)
+		return
+	}
+
+	var update models.Todo
+	err = json.NewDecoder(r.Body).Decode(&update)
+	if err != nil{
+		http.Error(w, "invalid request", http.StatusBadRequest)
+		return 
+	}
+
+	if update.Title != "" {
+		todo.Title = update.Title
+	}
+
+	todo.Check = update.Check
+database.Db.Save(&todo)
+
+w.WriteHeader(200)
+json.NewEncoder(w).Encode(todo)
 
 }
 
 func DeleteToDo(){
 
+	
+
 }
-*/
