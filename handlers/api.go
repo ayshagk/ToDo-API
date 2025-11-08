@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"todoapi/database"
 	"todoapi/models"
@@ -18,7 +19,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request){
 
 	var user models.User
 	err = database.Db.Where("email = ?", req.Email).First(&user).Error
-	 if err != nil{
+	 if err == nil{
 		http.Error(w, "sorry user already exists", http.StatusBadRequest)
 		return 
 	 }
@@ -30,6 +31,18 @@ func RegisterUser(w http.ResponseWriter, r *http.Request){
 	}
 
 	req.Password = HashPassword
+
+	err = database.Db.Create(&req).Error
+	if err != nil {
+		http.Error(w, "unable to create user", http.StatusBadRequest)
+		return
+	}
+
+	// send a response
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("user registered successfully!"))
+	
+	
 
 	
 	 
