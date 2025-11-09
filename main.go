@@ -1,10 +1,11 @@
 package main
-   
-//live app deployed on render : 
+
+//live app deployed on render : https://todo-api-gxa2.onrender.com
 
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"todoapi/database"
 	"todoapi/handlers"
 	"todoapi/middleware"
@@ -30,9 +31,20 @@ func main() {
 	protectRoutes.HandleFunc("/updateTodo", handlers.UpdateToDo)
 	protectRoutes.HandleFunc("/deleteTodo", handlers.DeleteToDo)
 
-	fmt.Println("server is running on port 8081...")
+	/*fmt.Println("server is running on port 8081...")
 	err := http.ListenAndServe(":8081", r)
 	if err != nil {
 		panic(err)
-	}
+	} */
+//took away our port and added something that would allow it to connect to render.
+	port := os.Getenv("PORT")
+if port == "" {
+    port = "8081" // fallback for local testing
+}
+
+fmt.Println("Server is running on port " + port)
+err := http.ListenAndServe(":"+port, r)
+if err != nil {
+    panic(err)
+}
 }

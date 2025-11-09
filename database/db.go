@@ -14,7 +14,7 @@ import (
 var Db *gorm.DB
 
 func InitDB() {
-	//had to add this for it to work on render
+	//add postgress on render to get database)url  in environmental vars so app can connect to db instead of local host.
 connStr := os.Getenv("DATABASE_URL")
 if connStr == "" {
     fmt.Println("No DATABASE_URL found! Running locally?")
