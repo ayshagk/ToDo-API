@@ -13,7 +13,11 @@ import (
 var Db *gorm.DB
 
 func InitDB() {
+	//had to add this for it to work on render
 	connStr := os.Getenv("DATABASE_URL")
+if connStr == "" {
+    connStr = "user=postgres host=localhost password=password dbname=toDoApp sslmode=disable"
+}
 	//connStr := "user=postgres host=localhost password=password dbname=toDoApp sslmode=disable"
 
 	var err error
