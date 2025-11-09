@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"todoapi/models"
@@ -14,8 +15,9 @@ var Db *gorm.DB
 
 func InitDB() {
 	//had to add this for it to work on render
-	connStr := os.Getenv("DATABASE_URL")
+connStr := os.Getenv("DATABASE_URL")
 if connStr == "" {
+    fmt.Println("No DATABASE_URL found! Running locally?")
     connStr = "user=postgres host=localhost password=password dbname=toDoApp sslmode=disable"
 }
 	//connStr := "user=postgres host=localhost password=password dbname=toDoApp sslmode=disable"
