@@ -17,6 +17,10 @@ func main() {
 	database.InitDB()
 
 	r := mux.NewRouter()
+// add this so it can maybe work on render!
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintln(w, "API is live!")
+})
 
 	//punlic routers
 	r.HandleFunc("/register", handlers.RegisterUser)
